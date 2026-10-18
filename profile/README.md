@@ -11,7 +11,7 @@
 <p align="center">
   <a href="https://go-avkit.github.io/docs/"><img alt="Docs" src="https://img.shields.io/badge/docs-mkdocs--material-0D9488?style=flat-square"></a>
   <a href="https://github.com/go-avkit/avkit/blob/main/LICENSE"><img alt="License: BSD-3-Clause" src="https://img.shields.io/badge/license-BSD--3--Clause-blue?style=flat-square"></a>
-  <img alt="Go 1.26.4+" src="https://img.shields.io/badge/go-1.26.4%2B-00ADD8?style=flat-square&logo=go&logoColor=white">
+  <img alt="Go 1.27.1+" src="https://img.shields.io/badge/go-1.27.1%2B-00ADD8?style=flat-square&logo=go&logoColor=white">
   <img alt="Coverage 100%" src="https://img.shields.io/badge/coverage-100%25-1a7f37?style=flat-square">
 </p>
 
@@ -23,7 +23,7 @@ Seven modules, in two layers.
 
 | | |
 |---|---|
-| [`avkit`](https://github.com/go-avkit/avkit) | sniff and demux MP4/ISO-BMFF, Matroska/WebM and MPEG-TS onto one format-neutral model; mux fragmented and progressive MP4 and MPEG-TS; copy, cut, join, concatenate and drop tracks — **no re-encoding anywhere**. Also `ConformHVC1`, which is what makes macOS show an HEVC file at all |
+| [`avkit`](https://github.com/go-avkit/avkit) | sniff and demux MP4/ISO-BMFF, Matroska/WebM and MPEG-TS onto one format-neutral model; mux fragmented and progressive MP4, Matroska/WebM and MPEG-TS; copy, cut, join, concatenate and drop tracks — **no re-encoding anywhere**. Also `ConformHVC1`, which is what makes macOS show an HEVC file at all |
 
 ### Bitstreams
 
