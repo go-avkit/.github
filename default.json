@@ -1,8 +1,12 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": [
+    "helpers:pinGitHubActionDigests pins every GitHub Action to a commit digest, keeping the tag as a comment (uses: actions/checkout@<sha> # v7). A tag is a mutable pointer: whoever controls the action's repository can move it, and every workflow naming it runs the new code on its next trigger with nothing in this organisation changing. A digest cannot be moved. Renovate keeps the digest current, so the tag still advances through ordinary pull requests that a person or the CI can see."
+  ],
   "extends": [
     "config:recommended",
-    ":semanticCommits"
+    ":semanticCommits",
+    "helpers:pinGitHubActionDigests"
   ],
   "postUpdateOptions": [
     "gomodTidy",
