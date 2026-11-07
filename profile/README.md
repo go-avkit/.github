@@ -23,7 +23,7 @@ Seven modules, in two layers.
 
 | | |
 |---|---|
-| [`avkit`](https://github.com/go-avkit/avkit) | sniff and demux MP4/ISO-BMFF, Matroska/WebM and MPEG-TS — and, read whole, ADTS, MP3, FLAC, Ogg, WAV and AVI — onto one format-neutral model; mux fragmented and progressive MP4, Matroska/WebM and MPEG-TS; carry subtitles (WebVTT, SRT, TTML, 3GPP tx3g, PGS), edit lists and metadata between MP4 and Matroska/WebM; extract an audio track as ADTS, MP3, FLAC, Ogg or WAV; copy, cut, join, concatenate and drop tracks — **no re-encoding anywhere**. Also `ConformHVC1`, which is what makes macOS show an HEVC file at all |
+| [`avkit`](https://github.com/go-avkit/avkit) | sniff and demux MP4/ISO-BMFF, Matroska/WebM and MPEG-TS — and, read whole, ADTS, MP3, FLAC, Ogg, WAV and AVI — onto one format-neutral model; mux fragmented and progressive MP4, Matroska/WebM and MPEG-TS; carry subtitles (WebVTT, SRT, TTML, 3GPP tx3g, PGS), edit lists and metadata between MP4 and Matroska/WebM; carry ALAC and Dolby TrueHD audio (not in MPEG-TS) and chapters (MP4 `chpl` and QuickTime track, Matroska); extract an audio track as ADTS, MP3, FLAC, Ogg or WAV; copy, cut, join, concatenate and drop tracks — **no re-encoding anywhere**. Also `ConformHVC1`, which is what makes macOS show an HEVC file at all |
 
 ### Bitstreams
 
