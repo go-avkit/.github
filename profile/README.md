@@ -17,7 +17,7 @@
 
 ---
 
-Seven modules, in two layers.
+Eight modules, in three layers.
 
 ### Containers
 
@@ -36,13 +36,20 @@ Seven modules, in two layers.
 | [`vp8`](https://github.com/go-avkit/vp8) | the VP8 frame tag and key-frame header |
 | [`vp9`](https://github.com/go-avkit/vp9) | the VP9 uncompressed header and superframe index |
 
-### ⛔ None of these is a decoder
+### Decoders
 
-Nothing in this organisation turns a bitstream into pixels. There is no entropy
-decoding of residual, no transform, no motion compensation and no deblocking.
-These read the syntax, and derive what the syntax implies — which is what a
-decoder needs before it can start, and what a tool describing or remuxing a file
-needs instead of one.
+| | |
+|---|---|
+| [`decode`](https://github.com/go-avkit/decode) | H.264 only, pure Go, wrapping [oops1/go.264](https://github.com/oops1/go.264): Constrained Baseline, Baseline without FMO/ASO, Main progressive and High 4:2:0 8-bit progressive; every other profile is refused with `ErrUnsupported`. Takes an `avcC` record or a `TrackConfig` with length-prefixed samples, or Annex B; returns display-order planar YUV with its PTS. 73 of the 81 JVT H.264.1 conformance streams give the same pictures as ffmpeg (8 refused); speed against ffmpeg is not yet measured |
+
+### ⛔ The bitstream modules are not decoders
+
+`bitstream`, `h264`, `h265`, `boolcoder`, `vp8` and `vp9` turn nothing into
+pixels: no entropy decoding of residual, no transform, no motion compensation
+and no deblocking. They read the syntax, and derive what the syntax implies —
+which is what a decoder needs before it can start, and what a tool describing or
+remuxing a file needs instead of one. Only `decode`, and only for H.264, produces
+pictures.
 
 Two of the repositories used to claim otherwise in their own descriptions, and
 that cost a reader a trip through the source to find out. They no longer do.
