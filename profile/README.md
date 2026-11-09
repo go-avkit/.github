@@ -23,7 +23,7 @@ Eight modules, in three layers.
 
 | | |
 |---|---|
-| [`avkit`](https://github.com/go-avkit/avkit) | sniff and demux MP4/ISO-BMFF, Matroska/WebM and MPEG-TS — and, read whole, ADTS, MP3, FLAC, Ogg, WAV and AVI — onto one format-neutral model; mux fragmented and progressive MP4, Matroska/WebM and MPEG-TS; carry subtitles (WebVTT, SRT, TTML, 3GPP tx3g, PGS), edit lists and metadata between MP4 and Matroska/WebM; carry ALAC and Dolby TrueHD audio (not in MPEG-TS) and chapters (MP4 `chpl` and QuickTime track, Matroska); extract an audio track as ADTS, MP3, FLAC, Ogg or WAV; cut a file into aligned CMAF/fMP4 and WebVTT segments for HLS and DASH (v0.14.0, VOD; the playlists and MPD are go-streamkit's), encrypted with Common Encryption `cenc` or `cbcs` and a caller-supplied key from v0.15.0; copy, cut, join, concatenate and drop tracks — **no re-encoding anywhere**. Also `ConformHVC1`, which is what makes macOS show an HEVC file at all |
+| [`avkit`](https://github.com/go-avkit/avkit) | sniff and demux MP4/ISO-BMFF, Matroska/WebM and MPEG-TS — and, read whole, ADTS, MP3, FLAC, Ogg, WAV and AVI — onto one format-neutral model; mux fragmented and progressive MP4, Matroska/WebM and MPEG-TS; carry subtitles (WebVTT, SRT, TTML, 3GPP tx3g, PGS), edit lists and metadata between MP4 and Matroska/WebM; carry ALAC and Dolby TrueHD audio (not in MPEG-TS) and chapters (MP4 `chpl` and QuickTime track, Matroska); cut a file into HLS and DASH segments (the `media` module writes the playlists and manifest with go-streamkit; `media.Keys` states the key of an encrypted presentation: `EXT-X-KEY`, `EXT-X-SESSION-KEY`, `ContentProtection`); extract an audio track as ADTS, MP3, FLAC, Ogg or WAV; cut a file into aligned CMAF/fMP4 and WebVTT segments for HLS and DASH (v0.14.0, VOD; the playlists and MPD are go-streamkit's), encrypted with Common Encryption `cenc` or `cbcs` and a caller-supplied key from v0.15.0; copy, cut, join, concatenate and drop tracks — **no re-encoding anywhere**. Also `ConformHVC1`, which is what makes macOS show an HEVC file at all |
 
 ### Bitstreams
 
@@ -40,7 +40,7 @@ Eight modules, in three layers.
 
 | | |
 |---|---|
-| [`decode`](https://github.com/go-avkit/decode) | H.264 only, pure Go, wrapping [oops1/go.264](https://github.com/oops1/go.264): Constrained Baseline, Baseline without FMO/ASO, Main progressive and High 4:2:0 8-bit progressive; every other profile is refused with `ErrUnsupported`. Takes an `avcC` record or a `TrackConfig` with length-prefixed samples, or Annex B; returns display-order planar YUV with its PTS. 73 of the 81 JVT H.264.1 conformance streams give the same pictures as ffmpeg (8 refused); speed against ffmpeg is not yet measured |
+| [`decode`](https://github.com/go-avkit/decode) | H.264 and HEVC, pure Go. H.264 wraps [oops1/go.264](https://github.com/oops1/go.264): Constrained Baseline, Baseline without FMO/ASO, Main progressive and High 4:2:0 8-bit progressive. HEVC wraps [gen2brain/h265](https://github.com/gen2brain/h265): Main and Main 10, 4:2:0. Every other profile is refused with `ErrUnsupported`. Takes a `TrackConfig`, an `avcC` or hvcC record, or Annex B; returns display-order planar YUV with its PTS, and `PosterFrame` returns one picture without decoding the track. 73 of the 81 JVT H.264.1 conformance streams give the same pictures as ffmpeg (8 refused); 143 of the 147 JCT-VC HEVC_v1 streams do, 3 more are decided by the suite's own MD5 (ours matches, ffmpeg differs) and 1 is refused by both; speed against ffmpeg is not yet measured |
 
 ### ⛔ The bitstream modules are not decoders
 
@@ -48,7 +48,7 @@ Eight modules, in three layers.
 pixels: no entropy decoding of residual, no transform, no motion compensation
 and no deblocking. They read the syntax, and derive what the syntax implies —
 which is what a decoder needs before it can start, and what a tool describing or
-remuxing a file needs instead of one. Only `decode`, and only for H.264, produces
+remuxing a file needs instead of one. Only `decode`, and only for H.264 and HEVC, produces
 pictures.
 
 Two of the repositories used to claim otherwise in their own descriptions, and
