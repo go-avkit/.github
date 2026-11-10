@@ -40,7 +40,7 @@ Eight modules, in three layers.
 
 | | |
 |---|---|
-| [`decode`](https://github.com/go-avkit/decode) | H.264 and HEVC, pure Go. H.264 wraps [oops1/go.264](https://github.com/oops1/go.264): Constrained Baseline, Baseline without FMO/ASO, Main progressive and High 4:2:0 8-bit progressive. HEVC wraps [gen2brain/h265](https://github.com/gen2brain/h265): Main and Main 10, 4:2:0. Every other profile is refused with `ErrUnsupported`. Takes a `TrackConfig`, an `avcC` or hvcC record, or Annex B; returns display-order planar YUV with its PTS, and `PosterFrame` returns one picture without decoding the track. 73 of the 81 JVT H.264.1 conformance streams give the same pictures as ffmpeg (8 refused); 143 of the 147 JCT-VC HEVC_v1 streams do, 3 more are decided by the suite's own MD5 (ours matches, ffmpeg differs) and 1 is refused by both; speed against ffmpeg is not yet measured |
+| [`decode`](https://github.com/go-avkit/decode) | H.264 and HEVC, pure Go. H.264 wraps [oops1/go.264](https://github.com/oops1/go.264): Constrained Baseline, Baseline without FMO/ASO, Main progressive and High 4:2:0 8-bit progressive. HEVC wraps [gen2brain/h265](https://github.com/gen2brain/h265): Main and Main 10, 4:2:0. Every other profile is refused with `ErrUnsupported`. Takes a `TrackConfig`, an `avcC` or hvcC record, or Annex B; returns display-order planar YUV with its PTS, and `PosterFrame` returns one picture without decoding the track. 73 of the 81 JVT H.264.1 conformance streams give the same pictures as ffmpeg (8 refused); 143 of the 147 JCT-VC HEVC_v1 streams do, 3 more are decided by the suite's own MD5 (ours matches, ffmpeg differs) and 1 is refused by both; audio: FLAC (bit-exact against ffmpeg; 32-bit refused), MP3 (maximum error 1.07e-6 against ffmpeg; MP2 not decoded) and Opus (passes all 12 RFC 8251 vectors with `opus_compare`; mono and stereo, 5.1 refused); Vorbis and AAC are not decoded; since v0.5.0 an MP4 edit list is applied by default, as ffmpeg does (`Config.IgnoreEditList` returns the raw track); speed against ffmpeg is not yet measured |
 
 ### ⛔ The bitstream modules are not decoders
 
@@ -49,7 +49,7 @@ pixels: no entropy decoding of residual, no transform, no motion compensation
 and no deblocking. They read the syntax, and derive what the syntax implies —
 which is what a decoder needs before it can start, and what a tool describing or
 remuxing a file needs instead of one. Only `decode`, and only for H.264 and HEVC, produces
-pictures.
+pictures, and only for FLAC, MP3 and Opus does it produce sound.
 
 Two of the repositories used to claim otherwise in their own descriptions, and
 that cost a reader a trip through the source to find out. They no longer do.
