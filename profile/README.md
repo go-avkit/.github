@@ -17,7 +17,7 @@
 
 ---
 
-Eight modules, in three layers.
+Nine modules, in three layers.
 
 ### Containers
 
@@ -40,7 +40,8 @@ Eight modules, in three layers.
 
 | | |
 |---|---|
-| [`decode`](https://github.com/go-avkit/decode) | H.264 and HEVC, pure Go. H.264 wraps [oops1/go.264](https://github.com/oops1/go.264): Constrained Baseline, Baseline without FMO/ASO, Main progressive and High 4:2:0 8-bit progressive. HEVC wraps [gen2brain/h265](https://github.com/gen2brain/h265): Main and Main 10, 4:2:0. Every other profile is refused with `ErrUnsupported`. Takes a `TrackConfig`, an `avcC` or hvcC record, or Annex B; returns display-order planar YUV with its PTS, and `PosterFrame` returns one picture without decoding the track. 73 of the 81 JVT H.264.1 conformance streams give the same pictures as ffmpeg (8 refused); 143 of the 147 JCT-VC HEVC_v1 streams do, 3 more are decided by the suite's own MD5 (ours matches, ffmpeg differs) and 1 is refused by both; audio: FLAC (bit-exact against ffmpeg; 32-bit refused), MP3 (maximum error 1.07e-6 against ffmpeg; MP2 not decoded) and Opus (passes all 12 RFC 8251 vectors with `opus_compare`; mono and stereo, 5.1 refused); Vorbis is not decoded; on the main branch, not yet in a release, AAC-LC and HE-AAC v1 (SBR) decode too, with MP4 gapless information (`iTunSMPB`, edit lists) applied as ffmpeg does, while Parametric Stereo (HE-AAC v2) is in the tree but switched off, so HE-AAC v2 is not a supported output; since v0.5.0 an MP4 edit list is applied by default, as ffmpeg does (`Config.IgnoreEditList` returns the raw track); **slower than ffmpeg on every video input measured, an open defect** (v0.3.0, single core, Apple M4 Max, ffmpeg 9.0.2 with one thread: H.264 High 1080p 36.5 against 173.1 fps, 0.21x; HEVC Main 10 2160p 10.3 against 27.9 fps, 0.37x; the committed streams 0.21x to 0.41x), with the hot spots mostly in the wrapped libraries; audio speed is not measured |
+| [`decode`](https://github.com/go-avkit/decode) | H.264 and HEVC, pure Go. H.264 wraps [oops1/go.264](https://github.com/oops1/go.264): Constrained Baseline, Baseline without FMO/ASO, Main progressive and High 4:2:0 8-bit progressive. HEVC wraps [gen2brain/h265](https://github.com/gen2brain/h265): Main and Main 10, 4:2:0. Every other profile is refused with `ErrUnsupported`. Takes a `TrackConfig`, an `avcC` or hvcC record, or Annex B; returns display-order planar YUV with its PTS, and `PosterFrame` returns one picture without decoding the track. 73 of the 81 JVT H.264.1 conformance streams give the same pictures as ffmpeg (8 refused); 143 of the 147 JCT-VC HEVC_v1 streams do, 3 more are decided by the suite's own MD5 (ours matches, ffmpeg differs) and 1 is refused by both; audio: FLAC (bit-exact against ffmpeg; 32-bit refused), MP3 (maximum error 1.07e-6 against ffmpeg; MP2 not decoded) and Opus (passes all 12 RFC 8251 vectors with `opus_compare`; mono and stereo, 5.1 refused); Vorbis is not decoded; since v0.6.0, AAC-LC and HE-AAC v1 (SBR) decode too, with MP4 gapless information (`iTunSMPB`, edit lists) applied as ffmpeg does, while Parametric Stereo (HE-AAC v2) is implemented but switched off by default, so HE-AAC v2 is not a supported output (AAC speed, decode-only benchmark against ffmpeg's whole-process utime, Go 1.27.4, Apple M4 Max, one core: 5.1 at 0.966 of ffmpeg, stereo at 0.655); since v0.5.0 an MP4 edit list is applied by default, as ffmpeg does (`Config.IgnoreEditList` returns the raw track); **slower than ffmpeg on every video input measured, an open defect** (v0.3.0, single core, Apple M4 Max, ffmpeg 9.0.2 with one thread: H.264 High 1080p 36.5 against 173.1 fps, 0.21x; HEVC Main 10 2160p 10.3 against 27.9 fps, 0.37x; the committed streams 0.21x to 0.41x), with the hot spots mostly in the wrapped libraries; FLAC, MP3 and Opus speed is not measured |
+| [`worker`](https://github.com/go-avkit/worker) | a `js/wasm` Web Worker that answers **poster** (a JPEG of the frame at a time) and **probe** (container, codec, size, duration) requests for a page that links neither a container reader nor a decoder; MP4 and WebM/Matroska, H.264 |
 
 ### ⛔ The bitstream modules are not decoders
 
@@ -49,7 +50,7 @@ pixels: no entropy decoding of residual, no transform, no motion compensation
 and no deblocking. They read the syntax, and derive what the syntax implies —
 which is what a decoder needs before it can start, and what a tool describing or
 remuxing a file needs instead of one. Only `decode`, and only for H.264 and HEVC, produces
-pictures, and only for FLAC, MP3 and Opus (and, on its main branch, AAC-LC and HE-AAC v1) does it produce sound.
+pictures, and only for FLAC, MP3 and Opus (and, since v0.6.0, AAC-LC and HE-AAC v1) does it produce sound.
 
 Two of the repositories used to claim otherwise in their own descriptions, and
 that cost a reader a trip through the source to find out. They no longer do.
