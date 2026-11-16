@@ -31,7 +31,7 @@ Nine modules, in three layers.
 |---|---|
 | [`bitstream`](https://github.com/go-avkit/bitstream) | what every H.264/H.265-family reader needs first: the bit reader with the formats' Exp-Golomb, both NAL framings, and the unescaping a payload is meaningless without |
 | [`h264`](https://github.com/go-avkit/h264) | the H.264/AVC bitstream **and the derivations of clause 8.2** — picture order counts, the reference picture set, the reference lists a slice predicts from, the prediction weights |
-| [`h265`](https://github.com/go-avkit/h265) | the H.265/HEVC bitstream: NAL layer, parameter sets, slice segment header, picture boundaries |
+| [`h265`](https://github.com/go-avkit/h265) | the H.265/HEVC bitstream: NAL layer, parameter sets, slice segment header, picture boundaries; since v0.14.0 the first part of a decoder of our own (full slice-data syntax, intra reconstruction with deblocking and SAO, the DPB; inter not reconstructed yet) and `Unit.TemporalID` is now TemporalId, not TemporalId + 2 |
 | [`boolcoder`](https://github.com/go-avkit/boolcoder) | the boolean arithmetic decoder VP8 and VP9 both read their compressed partitions with |
 | [`vp8`](https://github.com/go-avkit/vp8) | the VP8 frame tag and key-frame header |
 | [`vp9`](https://github.com/go-avkit/vp9) | the VP9 uncompressed header and superframe index |
@@ -45,9 +45,11 @@ Nine modules, in three layers.
 
 ### ⛔ The bitstream modules are not decoders
 
-`bitstream`, `h264`, `h265`, `boolcoder`, `vp8` and `vp9` turn nothing into
+`bitstream`, `h264`, `boolcoder`, `vp8` and `vp9` turn nothing into
 pixels: no entropy decoding of residual, no transform, no motion compensation
-and no deblocking. They read the syntax, and derive what the syntax implies —
+and no deblocking. `h265` is the exception in progress: since v0.14.0 it
+reconstructs intra pictures (with deblocking and SAO), but not inter, and
+`decode` does not use it. The others read the syntax, and derive what the syntax implies —
 which is what a decoder needs before it can start, and what a tool describing or
 remuxing a file needs instead of one. Only `decode`, and only for H.264 and HEVC, produces
 pictures, and only for FLAC, MP3 and Opus (and, since v0.6.0, AAC-LC and HE-AAC v1, and since v0.7.0 HE-AAC v2) does it produce sound.
