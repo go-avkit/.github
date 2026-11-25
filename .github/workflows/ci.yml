@@ -72,13 +72,19 @@ jobs:
                    .github/workflows/*.yml \
                  | sed -E 's/^[[:space:]]*-?[[:space:]]*uses:[[:space:]]*//' | sort -u)
           [ -n "$refs" ] || { echo "no pinned action refs found -- grep is wrong"; exit 1; }
+          # The SHA branch below reads the listing into a variable instead of
+          # `git ls-remote | grep -q`: grep -q exits on its first match, git
+          # dies of SIGPIPE, and pipefail turns that into a failure once the
+          # listing outgrows the pipe buffer (renovatebot/github-action,
+          # 2026-11-25).
           while read -r ref; do
               repo="${ref%@*}"; rev="${ref##*@}"
               if git ls-remote --refs "https://github.com/$repo" \
                    "refs/tags/$rev" "refs/heads/$rev" | grep -q .; then
                 echo "ok       $ref"
               elif [ "${#rev}" -eq 40 ] && \
-                   git ls-remote "https://github.com/$repo" | grep -q "^$rev"; then
+                   all=$(git ls-remote "https://github.com/$repo") && \
+                   grep -q "^$rev" <<< "$all"; then
                 echo "ok(sha)  $ref"
               else
                 echo "MISSING  $ref -- no such tag, branch or sha"; rc=1
