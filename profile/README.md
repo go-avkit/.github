@@ -41,7 +41,7 @@ Nine modules, in three layers. The detail of each (versions, measurements, cavea
 
 | | |
 |---|---|
-| [`decode`](https://github.com/go-avkit/decode) | H.264 and HEVC to planar YUV, FLAC, MP3, Opus, AAC and linear PCM to PCM; anything else is refused by name. Slower than ffmpeg on video and on HE-AAC v2 (1.42 times its user time), open defects. [What it claims, how it was measured](https://go-avkit.github.io/docs/main/decode/) |
+| [`decode`](https://github.com/go-avkit/decode) | H.264 and HEVC to planar YUV, FLAC, MP3, Opus, AAC and linear PCM to PCM; anything else is refused by name. Slower than ffmpeg on video and on HE-AAC v2 (1.28 times its user time), open defects. [What it claims, how it was measured](https://go-avkit.github.io/docs/main/decode/) |
 | [`worker`](https://github.com/go-avkit/worker) | a `js/wasm` Web Worker: **poster** returns a JPEG of a frame, **probe** returns container, codec, size and duration. [Details](https://go-avkit.github.io/docs/main/modules/#module-notes) |
 
 ### The bitstream modules are not decoders
